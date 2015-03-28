@@ -1,0 +1,140 @@
+<html>
+<title> Throughput Calculator </title>
+<meta charset="UTF-8">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+<script src="knob.js"></script>
+<script src="actual_cal.js"></script>
+<script src="slider.js"></script>
+<link rel="stylesheet" href="slider.css">
+
+<style>
+.outterLabel{vertical-align:middle; text-align:center; width:50%; float:left; padding-bottom:2.5%;}
+.innerLabel{display:block;}
+.sepLabel{padding-left:27%;}
+.bs-example{margin:20px;}
+.changedLabel {
+    padding-left:14%;
+}
+
+.modifiedLabel {
+    padding-left:14%;
+    padding-top:4%;
+}
+</style>
+
+<body>
+
+<div class ="row">
+<div class ="col-lg-12">
+<br>
+</div>
+<div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"> Throughput calculator</h3>
+            </div>
+             <div class="panel panel-default" style="padding:20px;">
+                 <div class="form-group">
+                    <label data-toggle="popover" data-placement="right" data-content="Amount of Data to be transmitted" class="btn-link outterLabel">
+                        <label for="window-size" class="innerLabel"> 
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Amount of Data to be Transmitted: (GB)     		
+                        </label>
+						<input type="text" id="payload" class="input-small knob" value="1" data-min="1" data-max="100" data-step="5" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#D70044" />
+                     </label>
+					 
+					 <label data-toggle="popover" data-placement="right" data-content="Bandwidth in MB" class="btn-link outterLabel">
+                        <label for="window-size" class="innerLabel"> 
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Bandwidth: (MB)          
+                        </label>
+						<input type="text" id="band" class="input-small knob" value="5" data-min="1" data-max="100000" data-step="5" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#053225" />
+                     </label>
+                     <br/>
+				 </div>
+                 
+                 <div class="form-group">
+                    <label data-toggle="popover" data-placement="right" data-content="Your Ip window size in Kilobytes" class="btn-link outterLabel">
+                        <label for="window_size" class="innerLabel">
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Window Size (KB):
+                        </label>
+						<input type="text" id="window" class="input-small knob" value="10" data-min="4" data-max="64" data-step="10" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#FE7160"  />
+                    </label>
+                
+					<label data-toggle="popover" data-placement="right" data-content="Latency value in Milliseconds" class="btn-link outterLabel">
+                        <label for="latency" class="innerLabel">
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Latency Time (ms):
+                        </label>
+						<input type="text" id="lat" class="input-small knob" value="10" data-min="5" data-max="250" data-step="10" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#BAD14F"  />  
+                    </label>
+                </div>
+                <br/>
+				 
+                 <div class="form-group">
+                 <label data-toggle="popover" data-placement="right" data-content="Error in Transmission" class="btn-link outterLabel">
+                        <label for="error" class="innerLabel">
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Error (%):
+                        </label>
+						<input type="text" id="err" class="input-small knob" value="0" data-min="0" data-max="50" data-step="10" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#47022B"  />
+                    </label>
+                    
+                   <label data-toggle="popover" data-placement="right" data-content="Number of parallel connections" class="btn-link outterLabel">
+                        <label for="parallel_con" class="innerLabel">
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Number of Parallel Connections:
+                        </label>
+						<input type="text" id="paracon" class="input-small knob" value="1" data-min="1" data-max="50" data-step="10" data-width="80" data-height="80" data-thickness=".2" data-fgColor="#BF4E30"  />
+                    </label>
+                 </div>
+				 
+				 <div class="form-group">
+                 <label data-toggle="popover" data-placement="right" data-content="Includes the IPv4 and TCP headers" class="btn-link sepLabel">
+                        <label for="headers">
+                            <i class="fa fa-question-circle fa-fw"></i>
+                            Consider Headers for calculating Throughput: <input type="checkbox" class="check_id" name="header" value="40" /> 
+                        </label>
+                    </label> 
+                 </div>
+				 
+				 <table class="table table-bordered">
+        <tbody>
+            <thead>
+                <tr>
+                    <th>Times</th>
+                    <th>In Seconds</th>
+                </tr>
+            </thead>
+            <tr class="success">
+                <td>TCP Throughput <strong>(MBps): </strong></td>
+                <td class="cost-estimate-value" id="throughput-cost">0</td>
+            </tr>
+            <tr class="warning">
+                <td>Time it takes along with errors:</td>
+                <td class="cost-estimate-value" id="time_error">0</td>
+            </tr>
+            <tr class="danger">
+                <td>Actual Backoff Time (including errors):</td>
+                <td class="cost-estimate-value" id="backofftime">0</td>      
+            </tr>
+            <tr class="active">
+                <td>Total Transmission time:</td>
+                <td class="cost-estimate-value" id="total_time">0</td>
+            </tr>
+			<tr class="info">
+                <td>Assumed Time by User:</td>
+                <td class="cost-estimate-value" id="user_time">0</td>         
+            </tr>
+        </tbody>
+    </table>   
+            </div>     
+        </div>
+    </div>
+</div>
+</body>
+</html>
